@@ -1,7 +1,7 @@
 import React from "react";
 import type { Metadata, ResolvingMetadata } from "next";
 
-import { auth } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 import prisma from "@/lib/prismadb";
 import RestaurantDetail from "@/app/(restaurtants)/(routes)/restaurant/[restaurantId]/components/RestaurantDetail";
 
@@ -30,7 +30,7 @@ export async function generateMetadata(
   };
 }
 
-const RestaurantDetailPage = async ({ params }: ReviewDetailProps) => {
+export default async function RestaurantDetailPage({ params }: ReviewDetailProps) {
   const { userId } = auth();
   const restaurant = await prisma.restaurant.findUnique({
     where: {
@@ -44,7 +44,11 @@ const RestaurantDetailPage = async ({ params }: ReviewDetailProps) => {
       },
     },
   });
-  return <RestaurantDetail userId={userId} restaurant={restaurant} />;
-};
+  
+  if (!restaurant) {
+    // Handle the case where the restaurant is not found
+    return <div>Restaurant not found</div>;
+  }
 
-export default RestaurantDetailPage;
+  return <RestaurantDetail userId={userId || null} restaurant={restaurant} />;
+}

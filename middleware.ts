@@ -1,12 +1,16 @@
-import { authMiddleware } from "@clerk/nextjs";
+import { authMiddleware } from "@clerk/nextjs/server";
 
-// This example protects all routes including api/trpc routes
-// Please edit this to allow other routes to be public as needed.
-// See https://clerk.com/docs/nextjs/middleware for more information about configuring your middleware
+// Define your public routes
 export default authMiddleware({
   publicRoutes: ["/", "/restaurant(.*)", "/contact", "/about"],
 });
 
+// Make sure that the matcher does not cause unexpected route matching issues
 export const config = {
-  matcher: ["/((?!.*\\..*|_next).*)", "/", "/(api|trpc)(.*)"],
+  matcher: [
+    "/((?!.*\\..*|_next).*)",  // Protect all routes except static files and Next.js internals
+    "/api/(.*)",  // Protect API routes
+    "/trpc/(.*)",  // Protect TRPC routes
+  ],
 };
+

@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { Toaster } from "@/components/ui/toaster";
 
-import { currentUser } from "@clerk/nextjs";
+import { currentUser } from "@clerk/nextjs/server";
 import GooglePlacesScript from "@/components/google/GooglePlacesScript";
 
 const urbanist = Urbanist({ subsets: ["latin"] });

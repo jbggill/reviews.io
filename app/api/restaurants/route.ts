@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prismadb";
-import { auth, currentUser } from "@clerk/nextjs";
+import { getAuth } from "@clerk/nextjs/server";
 
 export async function POST(req: Request) {
   try {
-    const user = await currentUser();
-    if (!user || !user.id) {
+    const { userId } = getAuth(req);
+    if (!userId) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
@@ -34,10 +34,12 @@ export async function POST(req: Request) {
         description,
         location: label,
         tags,
-        userId: user.id,
-        userName: user.firstName || "",
+        userId: userId,
+        // If you want to include the user's name, you might need to fetch more details about the user if not available in getAuth
+        userName: "", // Update this if you need more user information
       },
     });
+
     return NextResponse.json(restaurant);
   } catch (error) {
     console.log("[CONVERSATION_ERROR]", error);

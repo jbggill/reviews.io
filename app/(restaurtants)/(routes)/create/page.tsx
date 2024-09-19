@@ -73,6 +73,7 @@ const CreateReview = () => {
   const isLoading = form.formState.isSubmitting;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    console.log('values: ', values);
     try {
       await axios.post("/api/restaurants", values);
       toast({
